@@ -26,7 +26,7 @@ class AddReleaseNotesToChangelogAction
     /**
      * @throws Throwable
      */
-    public function execute(string $originalChangelog, string $latestVersion, string $headingText, ?string $releaseNotes, string $releaseDate, string $compareUrlTargetRevision): RenderedContentInterface
+    public function execute(string $originalChangelog, string $latestVersion,  string $latestCommitHash, string $headingText, ?string $releaseNotes, string $releaseDate, string $compareUrlTargetRevision): RenderedContentInterface
     {
         $changelog = $this->markdown->parse($originalChangelog);
 
@@ -38,6 +38,7 @@ class AddReleaseNotesToChangelogAction
             $changelog = $this->addNewReleaseNotesWithUnreleasedHeadingToChangelog->execute(
                 unreleasedHeading: $unreleasedHeading,
                 latestVersion: $latestVersion,
+                latestCommitHash: $latestCommitHash,
                 headingText: $headingText,
                 releaseDate: $releaseDate,
                 releaseNotes: $releaseNotes,
@@ -48,6 +49,7 @@ class AddReleaseNotesToChangelogAction
             $changelog = $this->addNewReleaseToChangelog->execute(
                 changelog: $changelog,
                 headingText: $headingText,
+                latestCommitHash: $latestCommitHash,
                 releaseDate: $releaseDate,
                 releaseNotes: $releaseNotes
             );

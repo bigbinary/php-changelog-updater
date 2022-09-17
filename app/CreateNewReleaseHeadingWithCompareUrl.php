@@ -19,9 +19,9 @@ class CreateNewReleaseHeadingWithCompareUrl
     ) {
     }
 
-    public function create(string $repositoryUrl, string $previousVersion, string $latestVersion, string $headingText, string $releaseDate): Heading
+    public function create(string $repositoryUrl, string $previousVersion, string $latestVersion, string $latestCommitHash, string $headingText, string $releaseDate): Heading
     {
-        $url = $this->generateCompareUrl->generate($repositoryUrl, $previousVersion, $latestVersion);
+        $url = $this->generateCompareUrl->generate($repositoryUrl, $previousVersion, $latestCommitHash);
 
         $this->gitHubActionsOutput->add('RELEASE_COMPARE_URL', $url);
 
