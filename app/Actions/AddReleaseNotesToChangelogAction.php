@@ -49,6 +49,7 @@ class AddReleaseNotesToChangelogAction
             $changelog = $this->addNewReleaseToChangelog->execute(
                 changelog: $changelog,
                 headingText: $headingText,
+                latestVersion: $latestVersion,
                 latestCommitHash: $latestCommitHash,
                 releaseDate: $releaseDate,
                 releaseNotes: $releaseNotes
