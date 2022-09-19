@@ -15,6 +15,7 @@ test('creates new release heading ast', function () {
     $repositoryUrl = 'https://github.com/org/repo';
     $previousVersion = 'v0.1.0';
     $latestVersion = 'v1.0.0';
+    $latestCommitHash = 'fdfd8fa3c00b02a1f209be0fb0508f9dd6f173fe';
     $headingText = $latestVersion;
     $releaseDate = '2021-02-01';
 
@@ -27,6 +28,7 @@ test('creates new release heading ast', function () {
         $repositoryUrl,
         $previousVersion,
         $latestVersion,
+        $latestCommitHash,
         $headingText,
         $releaseDate
     );
@@ -41,5 +43,5 @@ test('creates new release heading ast', function () {
 
 
     $renderedMarkdown = $markdownRenderer->renderDocument($document);
-    $this->assertEquals('## [v1.0.0](https://github.com/org/repo/compare/v0.1.0...v1.0.0) - 2021-02-01', trim($renderedMarkdown->getContent()));
+    $this->assertEquals('## [v1.0.0](https://github.com/org/repo/compare/v0.1.0...fdfd8fa3c00b02a1f209be0fb0508f9dd6f173fe) - 2021-02-01', trim($renderedMarkdown->getContent()));
 });
