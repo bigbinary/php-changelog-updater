@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Exceptions\ReleaseAlreadyExistsInChangelogException;
+use App\Exceptions\UnreleasedHeadingExistsException;
 use App\Queries\FindSecondLevelHeadingWithText;
 use App\Queries\FindUnreleasedHeading;
 use App\Support\Markdown;
@@ -18,13 +19,12 @@ class AddReleaseNotesToChangelogAction
         private readonly Markdown                                      $markdown,
         private readonly FindUnreleasedHeading                         $findUnreleasedHeading,
         private readonly FindSecondLevelHeadingWithText                $findSecondLevelHeadingWithText,
-        private readonly PlaceReleaseNotesBelowUnreleasedHeadingAction $addNewReleaseNotesWithUnreleasedHeadingToChangelog,
         private readonly PlaceReleaseNotesAtTheTopAction               $addNewReleaseToChangelog
     ) {
     }
 
     /**
-     * @throws Throwable
+     * @throws UnrelasedHeadingExistsException|Throwable
      */
     public function execute(string $originalChangelog, string $latestVersion,  string $latestCommitHash, string $headingText, ?string $releaseNotes, string $releaseDate, string $compareUrlTargetRevision): RenderedContentInterface
     {
@@ -34,27 +34,16 @@ class AddReleaseNotesToChangelogAction
 
         $unreleasedHeading = $this->findUnreleasedHeading->find($changelog);
 
-        if ($unreleasedHeading !== null) {
-            $changelog = $this->addNewReleaseNotesWithUnreleasedHeadingToChangelog->execute(
-                unreleasedHeading: $unreleasedHeading,
-                latestVersion: $latestVersion,
-                latestCommitHash: $latestCommitHash,
-                headingText: $headingText,
-                releaseDate: $releaseDate,
-                releaseNotes: $releaseNotes,
-                changelog: $changelog,
-                compareUrlTargetRevision: $compareUrlTargetRevision
-            );
-        } else {
-            $changelog = $this->addNewReleaseToChangelog->execute(
-                changelog: $changelog,
-                headingText: $headingText,
-                latestVersion: $latestVersion,
-                latestCommitHash: $latestCommitHash,
-                releaseDate: $releaseDate,
-                releaseNotes: $releaseNotes
-            );
-        }
+        throw_if($unreleasedHeading !== null,UnreleasedHeadingExistsException::class );
+
+        $changelog = $this->addNewReleaseToChangelog->execute(
+            changelog: $changelog,
+            headingText: $headingText,
+            latestVersion: $latestVersion,
+            latestCommitHash: $latestCommitHash,
+            releaseDate: $releaseDate,
+            releaseNotes: $releaseNotes
+        );
 
         return $this->markdown->render($changelog);
     }
