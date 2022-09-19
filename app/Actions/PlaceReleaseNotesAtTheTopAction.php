@@ -78,7 +78,7 @@ class PlaceReleaseNotesAtTheTopAction
         /** @var Link $linkNode */
         $linkNode = $previousVersionHeading->firstChild();
 
-        throw_if($linkNode === null, new LogicException("Can not find link node in unreleased heading."));
+        throw_if($linkNode === null, new LogicException("Can not find link node in previous version heading."));
 
         return $linkNode;
     }
