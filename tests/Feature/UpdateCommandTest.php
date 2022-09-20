@@ -217,6 +217,7 @@ it('uses existing content between unreleased and previous version heading as rel
     $this->artisan('update', [
         '--release-notes' => '',
         '--latest-version' => 'v1.0.0',
+        '--latest-commit' => '22981a6eeee7fd5fbf8a197b2195b2dec8f159e0',
         '--path-to-changelog' => __DIR__ . '/../Stubs/base-changelog-with-unreleased-notes.md',
         '--release-date' => '2021-02-01',
         '--compare-url-target-revision' => '1.x',
@@ -228,6 +229,7 @@ it('uses existing content between unreleased and previous version heading as rel
 it('uses existing content between unreleased and previous version heading as release notes if release notes option is not provided', function () {
     $this->artisan('update', [
         '--latest-version' => 'v1.0.0',
+        '--latest-commit' => '22981a6eeee7fd5fbf8a197b2195b2dec8f159e0',
         '--path-to-changelog' => __DIR__ . '/../Stubs/base-changelog-with-unreleased-notes.md',
         '--release-date' => '2021-02-01',
         '--compare-url-target-revision' => '1.x',
