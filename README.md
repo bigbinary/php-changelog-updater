@@ -36,6 +36,7 @@ php changelog-updater update \
 ### Removes
 - Remove Feature D" \
 --latest-version="v1.0.0" \
+--latest commit="22981a6eeee7fd5fbf8a197b2195b2dec8f159e0" \
 --release-date="2021-08-07" \
 --path-to-changelog="CHANGELOG.md" \
 --compare-url-target-revision="1.x"
@@ -55,6 +56,11 @@ If a given version already exists in the CHANGELOG, the CLI will display a warni
 **Required**. Version number of the latest release. The value will be used as the heading text if `--heading-text` is not set. If the changelog has a "Unreleased" heading, the value will be used in the updated compare URL.
 
 Example: `v1.0.0`
+
+### `--latest-commit`
+The commit hash of the latest release. This will be used to generate the compare link. If this is not provided, the value provided as `--latest-version` will be used (assuming it is a tag name).
+
+Example: `22981a6eeee7fd5fbf8a197b2195b2dec8f159e0`
 
 ### `--release-date`
 Optional (Defaults to current date). The date the latest version has been released. The value will be used in the release heading.
