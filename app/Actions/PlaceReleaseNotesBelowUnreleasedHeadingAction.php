@@ -31,7 +31,8 @@ class PlaceReleaseNotesBelowUnreleasedHeadingAction
      */
     public function execute(Heading $unreleasedHeading, string $latestCommit, string $headingText, string $releaseDate, ?string $releaseNotes, Document $changelog, string $compareUrlTargetRevision): Document
     {
-        $previousVersion = $this->getPreviousVersionFromUnreleasedHeading($unreleasedHeading);
+        // $previousVersion = $this->getPreviousVersionFromUnreleasedHeading($unreleasedHeading);
+        $previousCommit = $this->getPreviousCommitFromUnreleasedHeading($unreleasedHeading);
         $repositoryUrl = $this->getRepositoryUrlFromUnreleasedHeading($unreleasedHeading);
         $updatedUrl = $this->generateCompareUrl->generate($repositoryUrl, $latestCommit, $compareUrlTargetRevision);
 
@@ -40,21 +41,18 @@ class PlaceReleaseNotesBelowUnreleasedHeadingAction
         $this->gitHubActionsOutput->add('UNRELEASED_COMPARE_URL', $updatedUrl);
 
         // Create new Heading containing the new version number
-        $newReleaseHeading = $this->createNewReleaseHeading->create($repositoryUrl, $previousVersion, $latestCommit, $headingText, $releaseDate);
+        $newReleaseHeading = $this->createNewReleaseHeading->create($repositoryUrl, $previousCommit, $latestCommit, $headingText, $releaseDate);
 
         if (empty($releaseNotes)) {
             // If no Release Notes have been passed, add the new Release Heading below the updated Unreleased Heading.
             // We assume that the user already added their release notes under the Unreleased Heading.
             $unreleasedHeading->insertAfter($newReleaseHeading);
         } else {
-            // Find the Heading of the previous Version
-            $previousVersionHeading = $this->findPreviousVersionHeading->find($changelog, $previousVersion);
-
             return $this->insertReleaseNotesInChangelogAction->execute(
                 changelog: $changelog,
                 releaseNotes: $releaseNotes,
                 newReleaseHeading: $newReleaseHeading,
-                previousVersionHeading: $previousVersionHeading
+                unreleasedHeading: $unreleasedHeading
             );
         }
 
@@ -64,7 +62,7 @@ class PlaceReleaseNotesBelowUnreleasedHeadingAction
     /**
      * @throws Throwable
      */
-    private function getPreviousVersionFromUnreleasedHeading(Heading $unreleasedHeading): ?string
+    private function getPreviousCommitFromUnreleasedHeading(Heading $unreleasedHeading): ?string
     {
         $linkNode = $this->getLinkNodeFromHeading($unreleasedHeading);
 
