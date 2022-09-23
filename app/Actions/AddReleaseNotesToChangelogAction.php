@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Exceptions\ReleaseAlreadyExistsInChangelogException;
+use App\Exceptions\UnreleasedHeadingDoesNotExistException;
 use App\Queries\FindSecondLevelHeadingWithText;
 use App\Queries\FindUnreleasedHeading;
 use App\Support\Markdown;
@@ -24,7 +25,7 @@ class AddReleaseNotesToChangelogAction
     }
 
     /**
-     * @throws Throwable
+     * @throws UnreleasedHeadingDoesNotExistException|Throwable
      */
     public function execute(string $originalChangelog, string $latestVersion, string $latestCommit, string $headingText, ?string $releaseNotes, string $releaseDate, string $compareUrlTargetRevision): RenderedContentInterface
     {
@@ -45,12 +46,7 @@ class AddReleaseNotesToChangelogAction
                 compareUrlTargetRevision: $compareUrlTargetRevision
             );
         } else {
-            $changelog = $this->addNewReleaseToChangelog->execute(
-                changelog: $changelog,
-                headingText: $headingText,
-                releaseDate: $releaseDate,
-                releaseNotes: $releaseNotes
-            );
+            throw new UnreleasedHeadingDoesNotExistException();
         }
 
         return $this->markdown->render($changelog);

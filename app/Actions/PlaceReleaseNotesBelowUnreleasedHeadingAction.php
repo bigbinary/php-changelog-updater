@@ -31,7 +31,6 @@ class PlaceReleaseNotesBelowUnreleasedHeadingAction
      */
     public function execute(Heading $unreleasedHeading, string $latestCommit, string $headingText, string $releaseDate, ?string $releaseNotes, Document $changelog, string $compareUrlTargetRevision): Document
     {
-        // $previousVersion = $this->getPreviousVersionFromUnreleasedHeading($unreleasedHeading);
         $previousCommit = $this->getPreviousCommitFromUnreleasedHeading($unreleasedHeading);
         $repositoryUrl = $this->getRepositoryUrlFromUnreleasedHeading($unreleasedHeading);
         $updatedUrl = $this->generateCompareUrl->generate($repositoryUrl, $latestCommit, $compareUrlTargetRevision);
