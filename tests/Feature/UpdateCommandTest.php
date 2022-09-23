@@ -104,48 +104,6 @@ it('uses current date for release date if option is empty', function () {
          ->assertSuccessful();
 });
 
-it('places given release notes in correct position in given markdown changelog when no unreleased heading is available', function () {
-    $this->artisan('update', [
-        '--release-notes' => <<<MD
-        ### Added
-        - New Feature A
-        - New Feature B
-
-        ### Changed
-        - Update Feature C
-
-        ### Removes
-        - Remove Feature D
-        MD,
-        '--latest-version' => 'v1.0.0',
-        '--path-to-changelog' => __DIR__ . '/../Stubs/base-changelog-without-unreleased.md',
-        '--release-date' => '2021-02-01',
-    ])
-         ->expectsOutput(file_get_contents(__DIR__ . '/../Stubs/expected-changelog-without-unreleased.md'))
-         ->assertSuccessful();
-});
-
-it('places given release notes in correct position in given markdown changelog when no heading is available', function () {
-    $this->artisan('update', [
-        '--release-notes' => <<<MD
-        ### Added
-        - New Feature A
-        - New Feature B
-
-        ### Changed
-        - Update Feature C
-
-        ### Removes
-        - Remove Feature D
-        MD,
-        '--latest-version' => 'v1.0.0',
-        '--path-to-changelog' => __DIR__ . '/../Stubs/base-changelog-without-headings.md',
-        '--release-date' => '2021-02-01',
-    ])
-         ->expectsOutput(file_get_contents(__DIR__ . '/../Stubs/expected-changelog-without-headings.md'))
-         ->assertSuccessful();
-});
-
 it('places given release notes in correct position even if changelog is empty besides an unreleased heading', function () {
     $this->artisan('update', [
         '--release-notes' => <<<MD
@@ -238,38 +196,6 @@ it('uses existing content between unreleased and previous version heading as rel
          ->assertSuccessful();
 });
 
-it('nothing happens if no release notes have been given and no unreleased heading can be found', function () {
-    $this->artisan('update', [
-        '--latest-version' => 'v1.0.0',
-        '--path-to-changelog' => __DIR__ . '/../Stubs/base-changelog-without-unreleased.md',
-        '--release-date' => '2021-02-01',
-        '--compare-url-target-revision' => '1.x',
-    ])
-         ->expectsOutput('Release Notes were not provided. Pass them through the `--release-notes`-option.')
-         ->assertFailed();
-});
-
-test('it shows warning if changelog is empty and content can not be placed', function () {
-    $this->artisan('update', [
-        '--release-notes' => <<<MD
-        ### Added
-        - New Feature A
-        - New Feature B
-
-        ### Changed
-        - Update Feature C
-
-        ### Removes
-        - Remove Feature D
-        MD,
-        '--latest-version' => 'v1.0.0',
-        '--path-to-changelog' => __DIR__ . '/../Stubs/empty-changelog.md',
-        '--compare-url-target-revision' => 'HEAD',
-    ])
-         ->expectsOutput('Release notes could not be placed. Is the CHANGELOG empty? Does it contain at least one heading?')
-         ->assertFailed();
-});
-
 test('it automatically shifts heading levels to be level 3 headings to fit into the existing changelog', function ($releaseNotes) {
     $this->artisan('update', [
         '--release-notes' => $releaseNotes,
@@ -323,27 +249,5 @@ it('heading-text option allows user to use different heading text than latest-ve
         '--heading-text' => '::heading-text::',
     ])
          ->expectsOutput(file_get_contents(__DIR__ . '/../Stubs/expected-changelog-with-heading-text.md'))
-         ->assertSuccessful();
-});
-
-it('heading-text option allows user to use different heading text than latest-version when changelog does not contain unreleased heading', function () {
-    $this->artisan('update', [
-        '--release-notes' => <<<MD
-        ### Added
-        - New Feature A
-        - New Feature B
-
-        ### Changed
-        - Update Feature C
-
-        ### Removes
-        - Remove Feature D
-        MD,
-        '--latest-version' => 'v1.0.0',
-        '--path-to-changelog' => __DIR__ . '/../Stubs/base-changelog-without-unreleased.md',
-        '--release-date' => '2021-02-01',
-        '--heading-text' => '::heading-text::',
-    ])
-         ->expectsOutput(file_get_contents(__DIR__ . '/../Stubs/expected-changelog-without-unreleased-with-heading-text.md'))
          ->assertSuccessful();
 });
