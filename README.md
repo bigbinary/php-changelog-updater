@@ -141,10 +141,6 @@ Here is an example of a changelog, before it is updated with the CLI.
 
 ## [Unreleased](https://github.com/org/repo/compare/v1.0.0...HEAD)
 
-Please do not update the unreleased notes.
-
-<!-- Content should be placed here -->
-
 ## v1.0.0 - 2021-01-01
 
 ### Added
@@ -159,9 +155,6 @@ Below you find a diff-view of how the CLI will update the changelog.
 +## [Unreleased](https://github.com/org/repo/compare/v1.1.0...HEAD)
 -## [Unreleased](https://github.com/org/repo/compare/v1.0.0...HEAD)
 
-Please do not update the unreleased notes.
-
-<!-- Content should be placed here -->
 +## [v1.1.0](https://github.com/org/repo/compare/v1.0.0...v1.1.0) - 2021-02-01
 +
 +### Added
